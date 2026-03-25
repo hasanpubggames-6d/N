@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: php-bot-hosting
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    # المنفذ الذي يستمع عليه Apache
+    envVars:
+      - key: PORT
+        value: 80
