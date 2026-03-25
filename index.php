@@ -1,4 +1,5 @@
 <?php
+error_reporting(0);
 
 $API_KEY = "8523939636:AAESy_2Ndbu1Sp6LgtrReoL5INWwBQy38DM" ;
 $admin = 8313661137;
@@ -26,6 +27,40 @@ function bot($method, $datas = []) {
     }
 }
 
+// إنشاء المجلدات إذا لم تكن موجودة
+if (!is_dir("UploadEr")) mkdir("UploadEr");
+if (!is_dir("Host")) mkdir("Host");
+if (!is_dir("BEDO")) mkdir("BEDO");
+if (!is_dir("sudo")) mkdir("sudo");
+
+// إنشاء الملفات الأساسية إذا لم تكن موجودة
+if (!file_exists("UploadEr/UploadEr.json")) file_put_contents("UploadEr/UploadEr.json", json_encode([]));
+if (!file_exists("Host/Host.json")) file_put_contents("Host/Host.json", json_encode(["info"=>[]]));
+if (!file_exists("BEDO/arslan.json")) file_put_contents("BEDO/arslan.json", "");
+if (!file_exists("BEDO/arslan09.json")) file_put_contents("BEDO/arslan09.json", json_encode(["sudoarr"=>[],"addmessage"=>0,"messagee"=>0]));
+if (!file_exists("sudo/ban.txt")) file_put_contents("sudo/ban.txt", "");
+if (!file_exists("sudo/member.txt")) file_put_contents("sudo/member.txt", "");
+if (!file_exists("mem.txt")) file_put_contents("mem.txt", "");
+if (!file_exists("madey.json")) file_put_contents("madey.json", json_encode(["bot"=>"on"]));
+if (!file_exists("sudo.json")) file_put_contents("sudo.json", json_encode(["info"=>["amr"=>"null","fwrmember"=>0,"tnbih"=>0,"silk"=>0,"allch"=>0]]));
+if (!file_exists("AMR.txt")) file_put_contents("AMR.txt", "");
+if (!file_exists("AMR0.txt")) file_put_contents("AMR0.txt", "");
+if (!file_exists("AMR1.txt")) file_put_contents("AMR1.txt", "");
+if (!file_exists("AMR2.txt")) file_put_contents("AMR2.txt", "");
+if (!file_exists("AMR3.txt")) file_put_contents("AMR3.txt", "");
+if (!file_exists("AMR4.txt")) file_put_contents("AMR4.txt", "");
+
+// التحقق من وجود تحديث من تيليغرام
+$rawInput = file_get_contents('php://input');
+if (empty($rawInput)) {
+    echo "تم تشغيل البوت ✅";
+    exit;
+}
+$updateCheck = json_decode($rawInput);
+if (!$updateCheck || (!isset($updateCheck->message) && !isset($updateCheck->callback_query))) {
+    echo "تم تشغيل البوت ✅";
+    exit;
+}
 
 $usrbot = bot("getme")->result->username;
 $emoji = "➡️
@@ -38,8 +73,7 @@ $emoji = explode("\n", $emoji);
 $b = $emoji[rand(0, 4)];
 $NamesBACK = "رجوع $b";
 
-define("USR_BOT", $usrbot);
-mkdir("UploadEr");
+if (!defined("USR_BOT")) define("USR_BOT", $usrbot);
 
 function SETJSON($INPUT)
 {
@@ -50,42 +84,36 @@ function SETJSON($INPUT)
         file_put_contents($F, $N);
     }
 }
-$update = json_decode(file_get_contents('php://input'));
-$message = $update->message;
-$chat_id2 = $update->callback_query->message->chat->id;
-$message_id2 = $update->callback_query->message->message_id;
-$data = $update->callback_query->data;
-$id = $message->from->id;
-$text = $message->text;
-$chat_id = $message->chat->id;
-$user = $message->from->username;
-$message = $update->message;
-$chat_id = $message->chat->id;
-$text = $message->text;
-$chat_id2 = $update->callback_query->message->chat->id;
-$message_id = $update->callback_query->message->message_id;
-$data = $update->callback_query->data;
-$name = $update->message->from->first_name;
-$from_id = $update->message->from->id;
+$update = json_decode($rawInput);
+$message = $update->message ?? null;
+$chat_id2 = $update->callback_query->message->chat->id ?? null;
+$message_id2 = $update->callback_query->message->message_id ?? null;
+$data = $update->callback_query->data ?? null;
+$id = $message->from->id ?? null;
+$text = $message->text ?? null;
+$chat_id = $message->chat->id ?? null;
+$user = $message->from->username ?? null;
+$name = $update->message->from->first_name ?? null;
+$from_id = $update->message->from->id ?? null;
 ####لوحة الادمن###
 $admin = "8313661137"; ###ايديك###
 $sudo = array("8313661137","8313661137","8313661137");
-$AMR = file_get_contents("AMR.txt");
-$AMR0 = file_get_contents("AMR0.txt");
-$AMR1= file_get_contents("AMR1.txt");
-$AMR5 = file_get_contents("AMR2.txt");
-$AMR6 = file_get_contents("AMR3.txt");
-$AMR20 = json_decode(file_get_contents('php://input'));
-$AMR18 = $update->message;
-$AMR13 = $AMR18->chat->id;
-$AMR17 = $AMR18->text;
-$AMRD = $AMR20->callback_query->data;
-$AMR12 = $AMR20->callback_query->message->chat->id;
-$AMR14 =  $AMR20->callback_query->message->message_id;
-$AMR15 = $AMR18->from->first_name;
-$AMR16 = $AMR18->from->username;
-$AMR11 = $AMR18->from->id;
-$AMR2 = explode("\n",file_get_contents("AMR4.txt"));
+$AMR = file_get_contents("AMR.txt") ?: "";
+$AMR0 = file_get_contents("AMR0.txt") ?: "";
+$AMR1 = file_get_contents("AMR1.txt") ?: "";
+$AMR5 = file_get_contents("AMR2.txt") ?: "";
+$AMR6 = file_get_contents("AMR3.txt") ?: "";
+$AMR20 = $update;
+$AMR18 = $update->message ?? null;
+$AMR13 = $AMR18->chat->id ?? null;
+$AMR17 = $AMR18->text ?? null;
+$AMRD = $AMR20->callback_query->data ?? null;
+$AMR12 = $AMR20->callback_query->message->chat->id ?? null;
+$AMR14 = $AMR20->callback_query->message->message_id ?? null;
+$AMR15 = $AMR18->from->first_name ?? null;
+$AMR16 = $AMR18->from->username ?? null;
+$AMR11 = $AMR18->from->id ?? null;
+$AMR2 = explode("\n", file_get_contents("AMR4.txt") ?: "");
 $AMR3 = count($AMR2)-1;
 if ($AMR18 && !in_array($AMR11, $AMR2)) {
 file_put_contents("AMR4.txt", $AMR11."\n",FILE_APPEND);
@@ -437,24 +465,23 @@ if ($update->callback_query) {
     $from_id = $update->callback_query->from->id;
 }
 //تخزينات الاذاعة//
-echo "تم تشغيل البوت ✅";
-$update = json_decode(file_get_contents('php://input'));
-$message= $update->message;
-$text = $message->text;
-$chat_id= $message->chat->id;
-$name = $message->from->first_name;
-$user = $message->from->username;
-$message_id = $update->message->message_id;
-$from_id = $update->message->from->id;
-$a = strtolower($text);
-$message = $update->message;
-$chat_id = $message->chat->id;
-$text = $message->text;
-$chat_id2 = $update->callback_query->message->chat->id;
-$message_id = $update->callback_query->message->message_id;
-$data = $update->callback_query->data;
-$from_id = $message->from->id;
-$msg = file_get_contents("msg.php");
+//تخزينات الاذاعة//
+$message= $update->message ?? null;
+$text = $message->text ?? null;
+$chat_id= $message->chat->id ?? null;
+$name = $message->from->first_name ?? null;
+$user = $message->from->username ?? null;
+$message_id = $update->message->message_id ?? null;
+$from_id = $update->message->from->id ?? null;
+$a = strtolower($text ?? "");
+$message = $update->message ?? null;
+$chat_id = $message->chat->id ?? null;
+$text = $message->text ?? null;
+$chat_id2 = $update->callback_query->message->chat->id ?? null;
+$message_id = $update->callback_query->message->message_id ?? ($update->message->message_id ?? null);
+$data = $update->callback_query->data ?? null;
+$from_id = $message->from->id ?? null;
+$msg = file_exists("msg.php") ? file_get_contents("msg.php") : "";
 
 $users = explode("\n",file_get_contents("BEDO/arslan.json"));
 
@@ -498,8 +525,8 @@ bot('sendMessage',[
 ",
 ]);return false;}
 
-$reply = $message->reply_to_message->message_id;
-$rep = $message->reply_to_message->forward_from; 
+$reply = $message->reply_to_message->message_id ?? null;
+$rep = $message->reply_to_message->forward_from ?? null;
 
 if($countban<=0){
 $countban="لايوجد محظورين";
@@ -538,66 +565,36 @@ $emoji = explode("\n", $emoji);
 $b = $emoji[rand(0, 4)];
 $NamesBACK = "رجوع $b";
 
-define("USR_BOT", $usrbot);
-mkdir("Host");
-mkdir("BEDO");
-mkdir("sudo");
+if (!defined("USR_BOT")) define("USR_BOT", $usrbot);
 
 
-$update = json_decode(file_get_contents('php://input'));
+$update = json_decode($rawInput);
 
 if ($update->message) {
     $message = $update->message;
     $message_id = $update->message->message_id;
-    $username = $message->from->username;
+    $username = $message->from->username ?? null;
     $chat_id = $message->chat->id;
-    $title = $message->chat->title;
-    $text = $message->text;
-    $user = $message->from->username;
-    $name = $message->from->first_name;
+    $title = $message->chat->title ?? null;
+    $text = $message->text ?? null;
+    $user = $message->from->username ?? null;
+    $name = $message->from->first_name ?? null;
     $from_id = $message->from->id;
 }
 
-$UploadEr = json_decode(file_get_contents("UploadEr/UploadEr.json"), true);
-
+$UploadEr = json_decode(file_get_contents("UploadEr/UploadEr.json"), true) ?: [];
 
 if ($update->callback_query) {
     $data = $update->callback_query->data;
     $chat_id = $update->callback_query->message->chat->id;
-    $title = $update->callback_query->message->chat->title;
+    $title = $update->callback_query->message->chat->title ?? null;
     $message_id = $update->callback_query->message->message_id;
-    $name = $update->callback_query->message->chat->first_name;
-    $user = $update->callback_query->message->chat->username;
+    $name = $update->callback_query->message->chat->first_name ?? null;
+    $user = $update->callback_query->message->chat->username ?? null;
     $from_id = $update->callback_query->from->id;
 }
 
-	
-$update = json_decode(file_get_contents('php://input'));
-
-if ($update->message) {
-    $message = $update->message;
-    $message_id = $update->message->message_id;
-    $username = $message->from->username;
-    $chat_id = $message->chat->id;
-    $title = $message->chat->title;
-    $text = $message->text;
-    $user = $message->from->username;
-    $name = $message->from->first_name;
-    $from_id = $message->from->id;
-}
-
-$Host = json_decode(file_get_contents("Host/Host.json"), true);
-
-
-if ($update->callback_query) {
-    $data = $update->callback_query->data;
-    $chat_id = $update->callback_query->message->chat->id;
-    $title = $update->callback_query->message->chat->title;
-    $message_id = $update->callback_query->message->message_id;
-    $name = $update->callback_query->message->chat->first_name;
-    $user = $update->callback_query->message->chat->username;
-    $from_id = $update->callback_query->from->id;
-}
+$Host = json_decode(file_get_contents("Host/Host.json"), true) ?: [];
 
 //——————————————————//
 $MTAWR = "E60gr";  //معرفك
@@ -687,40 +684,4 @@ bot('EditMessageText',[
 'message_id'=>$message_id,
 'text'=>"
 
-• تم ايقاف البوت بنجاح ❌️
-",
-'parse_mode'=>"markdown",
-'reply_markup'=>json_encode([
-'inline_keyboard'=>[
-[['text'=>"رجوع ➡️ ",'callback_data'=>"Thkom" ]],
-]])
-]);
-$madey['bot'] = "off";
-file_put_contents("madey.json",json_encode($madey,32|128|265));
-}
-
-//لوحة الادمن//
-if($text == "/admin" and $from_id == $admin){
-bot('sendMessage',[
-'chat_id'=>$admin,
-'message_id'=>$message_id,
-'text'=>"
-⎋ اهلا بك في لوحة الادمن الخاصه بالبوت ⚙️  — — — — — — — — — — — — — —
-
-",
-'parse_mode'=>"MARKDOWN",
-'reply_markup'=>json_encode([ 
-'inline_keyboard'=>[
-[['text'=>$xm,'callback_data'=>" " ]],
-[['text'=>"ايقاف البوت",'callback_data'=>"off" ],['text'=>"تشغيل البوت",'callback_data'=>"on" ]],
-[['text'=>'قسم الاشتࢪاك الاجباࢪي' ,'callback_data'=>"bnt"],['text'=>'قسم الحظࢪ' ,'callback_data'=>"ksmban"]],
-[['text'=>'قسم الاذاعه' ,'callback_data'=>"msg"],['text'=>'قسم الࢪسائل' ,'callback_data'=>"sendms"]],
-[['text'=>'• احصائيات البوت •' ,'callback_data'=>"HkH"]],
-]])
-]);
-}
-if($data == "Thkom"){
-bot('EditMessageText',[
-'chat_id'=>$admin,
-'message_id'=>$message_id,
-'text'=>"
+• تم ايقاف
